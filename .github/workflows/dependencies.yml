@@ -1,0 +1,60 @@
+name: Deploy dependencies
+on: [push]
+
+jobs:
+  mysql:
+    name: mysql
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: >-
+            helm upgrade mysql oci://registry-1.docker.io/bitnamicharts/mysql
+            --install
+            --wait 
+            --atomic 
+            --namespace=default
+            --values=mysql/values.yaml
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
+
+  redis:
+    name: redis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: >-
+            helm upgrade redis oci://registry-1.docker.io/bitnamicharts/redis
+            --install
+            --wait 
+            --atomic 
+            --namespace=default
+            --values=redis/values.yaml
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
+
+  mongodb:
+    name: mongodb
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: >-
+            helm upgrade mongodb oci://registry-1.docker.io/bitnamicharts/mongodb
+            --install
+            --wait 
+            --atomic 
+            --namespace=default
+            --values=mongodb/values.yaml
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
