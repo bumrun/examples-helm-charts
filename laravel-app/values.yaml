@@ -12,7 +12,9 @@ nginx:
 
   resources: {}
 
-  volumeMounts: []
+  volumeMounts:
+    - mountPath: /app/public
+      name: public
 
   env: []    
 
@@ -24,9 +26,7 @@ app:
 
   resources: {}
 
-  volumeMounts:
-    - mountPath: /app/public
-      name: public
+  volumeMounts: []
 
   env: []
 
