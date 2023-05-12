@@ -55,6 +55,11 @@ spec:
           #    port: http
           resources:
             {{- toYaml .Values.nginx.resources | nindent 12 }}
+          env:
+          {{- range $name, $value := .Values.nginx.env }}
+            - name: {{ $name | quote }} 
+              value: {{ $value | quote }}
+          {{- end }}
           volumeMounts:
             - mountPath: /etc/nginx/conf.d
               readOnly: true
@@ -79,6 +84,11 @@ spec:
               port: app
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
+          env:
+          {{- range $name, $value := .Values.app.env }}
+            - name: {{ $name | quote }} 
+              value: {{ $value | quote }}
+          {{- end }}
           volumeMounts:
           {{- with .Values.app.volumeMounts }}
             {{- toYaml . | nindent 12 }}
