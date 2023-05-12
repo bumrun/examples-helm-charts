@@ -27,6 +27,16 @@ spec:
       serviceAccountName: {{ include "laravel-app.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: public-sync
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          command: ["sh", "-c", "cp", "-rp", "/app/public/*", "/public"]
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /public
+              name: public          
       containers:
         - name: nginx
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
@@ -49,6 +59,8 @@ spec:
             - mountPath: /etc/nginx/conf.d
               readOnly: true
               name: nginx-config
+            - mountPath: /app/public
+              name: public
           {{- with .Values.nginx.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -78,6 +90,8 @@ spec:
             items:
               - key: nginx.conf
                 path: nginx.conf
+        - name: public
+          emptyDir: {}
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

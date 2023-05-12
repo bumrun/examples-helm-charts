@@ -12,9 +12,7 @@ nginx:
 
   resources: {}
 
-  volumeMounts:
-    - mountPath: /app/public
-      name: public
+  volumeMounts: []
 
   env: []    
 
@@ -30,9 +28,7 @@ app:
 
   env: []
 
-volumes:
-  - name: public
-    emptyDir: {}
+volumes: []
 
 imagePullSecrets: []
 nameOverride: ""
