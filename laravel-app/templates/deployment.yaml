@@ -91,7 +91,8 @@ spec:
           {{- end }}
           volumeMounts:
             - name: laravel-config
-              mountPath: /app
+              mountPath: /app/.env
+              subPath: laravel-config
           {{- with .Values.app.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -107,9 +108,6 @@ spec:
         - name: laravel-config
           secret:
             secretName: {{ include "laravel-app.fullname" . }}
-            items:
-              - key: laravel-config
-                path: .env
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
