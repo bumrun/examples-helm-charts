@@ -35,3 +35,7 @@ data:
         include fastcgi_params;
       }
     }
+
+  php.ini: |
+    ; php.ini custom configuration
+    ;
