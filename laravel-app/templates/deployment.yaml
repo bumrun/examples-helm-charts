@@ -90,6 +90,8 @@ spec:
               value: {{ $value | quote }}
           {{- end }}
           volumeMounts:
+            - name: laravel-config
+              mountPath: /app
           {{- with .Values.app.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -102,6 +104,12 @@ spec:
                 path: nginx.conf
         - name: public
           emptyDir: {}
+        - name: laravel-config
+          secret:
+            secretName: {{ include "laravel-app.fullname" . }}
+            items:
+              - key: laravel-config
+                path: .env
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
