@@ -72,7 +72,6 @@ spec:
         - name: app
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
-          args: ["sh", "-c", "/entrypoint.sh"]
           ports:
             - name: app
               containerPort: 9000
