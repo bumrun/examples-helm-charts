@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: public-sync
+        - name: app-sync
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           command: ["sh", "-c", "cp -rp /app/public/* /public"]
@@ -36,7 +36,7 @@ spec:
             {{- toYaml .Values.app.resources | nindent 12 }}
           volumeMounts:
             - mountPath: /public
-              name: public          
+              name: public
       containers:
         - name: nginx
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
@@ -72,6 +72,7 @@ spec:
         - name: app
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          args: ["sh", "-c", "/entrypoint.sh"]
           ports:
             - name: app
               containerPort: 9000
@@ -91,6 +92,8 @@ spec:
             - mountPath: /opt/bitnami/php/etc/conf.d
               readOnly: true
               name: php-ini
+            - mountPath: /app/public
+              name: public
           {{- with .Values.app.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
